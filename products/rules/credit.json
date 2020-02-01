@@ -1,10 +1,10 @@
 {
   "GOOD": {
-    "value": 720,
+    "score": 720,
     "basis_points": 0.3
   },
   "BAD": {
-    "value": 720,
+    "score": 720,
     "basis_points": 0.5
   }
 }

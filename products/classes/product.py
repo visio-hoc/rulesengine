@@ -1,7 +1,7 @@
 class Product:
   name = ""
-  interest_rate = float()
   disqualified = bool()
+  interest_rate = float()
 
   def __init__(self, name: str, interest_rate: float):
     self.name = name

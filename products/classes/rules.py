@@ -1,4 +1,5 @@
 class Rules():
+  #default rules categories, would normally place this in settings
   categories = ['credit', 'products', 'states']
 
   def __init__(self):
