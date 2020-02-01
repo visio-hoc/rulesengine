@@ -7,11 +7,15 @@ class RulesImport(Rules):
 
   rules = {}
 
-  def __init__(self, source = 'JSON'):
-    self.rules = self._getDefaults()
+  def __init__(self, source = 'JSON', categories = []):
+    if categories != []:
+      #custom rule categories given, update self.rules
+      for cat in categories:
+        self.rules.update({cat: {}})
+    else:
+      self.rules = self._getDefaults()
     
     #instructions mentioned rules source could be from different origins and/or format
-
     if source == 'JSON':
       self._JSON()
     elif source == 'CSV':
@@ -22,7 +26,7 @@ class RulesImport(Rules):
   def _JSON(self):
     import json
 
-    for cat in self.categories:
+    for cat in self.rules:
       """
       I could have made the folder/path an env setting
       """

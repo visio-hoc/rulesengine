@@ -16,9 +16,11 @@ class RulesEngine():
       'credit': self._credit,
       'products': self._products,
       'states': self._states,
+      'income': self._income,
     }
 
     self.logs = []
+    self.error_message = ""
 
   def runRules(self, person: Person, product: Product, rules: Rules):    
     if not rules:
@@ -40,6 +42,7 @@ class RulesEngine():
     """   
 
     self.logs.append(f'*** Rules processing -> STARTED ***')
+    self.logs.append(f'*** INITIAL Interest Rate is {self.product.interest_rate} ***')
 
     for category in self.checks:
       try:
@@ -52,7 +55,7 @@ class RulesEngine():
         self.functionToCall = self.checksHash[category]
         self.run_function(rule)
       except:
-        self.error_message = "No function to process rule."
+        self.error_message = f"No function to process {category} rule."
         return 
 
     self.logs.append(f'*** Rules processing -> ENDED ***')
@@ -96,7 +99,33 @@ class RulesEngine():
 
     if self.person.state in excluded:
       self.product.disqualified = True
-      self.logs.append(f'States check -> match FOUND -> {self.person.state} is excluded')
+      self.logs.append(f'States check -> match FOUND, DISQUALIFIED -> {self.person.state} is excluded')
+
+  def _income(self, rule):
+    try:
+      minimumIncome = rule['income']['minimum']
+      employmentStatusRequired = rule['employment']['status']
+      debtToIncome = rule['DTI']['max']
+    except:
+      self.error_message = "Missing values for income rule."
+      return
+
+    #if any of the checks disqualifies person, then return
+
+    if self.person.currentIncome < minimumIncome:
+      self.product.disqualified = True
+      self.logs.append(f'Income check -> TOO LOW -> Person is disqualified.')
+      return
+
+    if employmentStatusRequired and not self.person.currentlyEmployed:
+      self.product.disqualified = True
+      self.logs.append(f'Employment Status check -> UNEMPLOYED -> Person is disqualified.')
+      return
+
+    if self.person.debtToIncome >= debtToIncome:
+      self.product.disqualified = True
+      self.logs.append(f'DTI check -> TOO HIGH -> Person is disqualified.')
+      return
 
   def run_function(self, rule):
     self.functionToCall(rule)

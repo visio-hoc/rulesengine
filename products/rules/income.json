@@ -1,0 +1,11 @@
+{
+  "income": {
+    "minimum": 50000
+  },
+  "employment": {
+    "status": "True"
+  },
+  "DTI": {
+    "max": 0.41
+  }
+}
