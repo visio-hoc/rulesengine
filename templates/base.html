@@ -20,25 +20,17 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container">
-      <a class="navbar-brand" href="#">Start Bootstrap</a>
+      <a class="navbar-brand" href="#">Vision Financials Coding Test</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home
-              <span class="sr-only">(current)</span>
-            </a>
+            <a class="nav-link" href="#">Base Case</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Services</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
+            <a class="nav-link" href="#">Extended</a>
           </li>
         </ul>
       </div>
@@ -49,11 +41,26 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
-        <h1 class="mt-5">Vision Financials Coding Test</h1>
+        <h1 class="mt-5">Base Case</h1>
         {% block body %}
         {% endblock %}
       </div>
     </div>
+
+    {% if logs %}
+    <code class="">
+      <div class="row p-3 bg-light mt-5">      
+        <div class="col-md-12">
+          <div class=""><h4><strong>Rule Logs:</strong></h4></div>
+          <ul>
+            {% for log in logs %}
+              <li>{{ log|safe }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </code>
+    {% endif %}
   </div>
 
   <!-- Bootstrap core JavaScript -->

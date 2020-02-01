@@ -7,6 +7,9 @@ class RulesEngine():
   #will be displayed on view if there was an error
   error_message = '' 
 
+  #logs for what rules were processed/used
+  logs = []
+
   def __init__(self):
     #setup hash to link rules to functions
     self.checksHash = {
@@ -14,6 +17,8 @@ class RulesEngine():
       'products': self._products,
       'states': self._states,
     }
+
+    self.logs = []
 
   def runRules(self, person: Person, product: Product, rules: Rules):    
     if not rules:
@@ -34,6 +39,8 @@ class RulesEngine():
     the rules property
     """   
 
+    self.logs.append(f'*** Rules processing -> STARTED ***')
+
     for category in self.checks:
       try:
         rule = self.rules.getRules(category)
@@ -48,6 +55,8 @@ class RulesEngine():
         self.error_message = "No function to process rule."
         return 
 
+    self.logs.append(f'*** Rules processing -> ENDED ***')
+
   def _credit(self, rule):    
     try:
       goodScore = rule['GOOD']['score']
@@ -60,8 +69,10 @@ class RulesEngine():
 
     if self.person.credit_score >= goodScore:
       self.product.interest_rate -= goodPoints
+      self.logs.append(f'Credit check -> GOOD score -> decreased by {goodPoints}')
     elif self.person.credit_score < badScore:
       self.product.interest_rate += badPoints
+      self.logs.append(f'Credit check -> BAD score -> increased by {badPoints}')
 
   def _products(self, rule):
     if self.product.name in rule:
@@ -71,6 +82,8 @@ class RulesEngine():
           self.product.interest_rate += specific_rule['basis_points']
         elif specific_rule['action'] == 'subtract':
           self.product.interest_rate -= specific_rule['basis_points']
+
+        self.logs.append(f'Product check -> rule FOUND -> {specific_rule["action"]} by {specific_rule["basis_points"]}')
       except:
         self.error_message = "Missing values for credit score rule."
 
@@ -83,6 +96,7 @@ class RulesEngine():
 
     if self.person.state in excluded:
       self.product.disqualified = True
+      self.logs.append(f'States check -> match FOUND -> {self.person.state} is excluded')
 
   def run_function(self, rule):
     self.functionToCall(rule)

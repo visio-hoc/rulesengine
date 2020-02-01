@@ -1,17 +1,26 @@
 {% extends 'base.html' %}
 
-{% block title %}Visio Finacials Coding Test{% endblock %}
+{% block title %}Base Case{% endblock %}
 
 {% block body %}
 <div class="row">
 
   <div class="col-md-12">
-    <div class=""></div>
-    {{ person.credit_score }}
-    {{ person.state }}
-    {{ product.interest_rate }}
-    {{ product.disqualified }}
+    <div class="block"><h3>Person:</h3></div>
+    <div>Credit Score: {{ person.credit_score }}</div>
+    <div>State: {{ person.state }}</div>
   </div>
 
+  <div class="col-md-12 mt-3">
+    <div class="block"><h3>Product:</h3></div>
+    <div>Name: {{ product.name }}</div>
+    <div>Interest Rate: {{ product.interest_rate }}</div>
+    <div>Disqualified: {{ product.disqualified }}</div>
+  </div>
+
+</div>
+
+<div class="row">
+  {{ data.error_message }}
 </div>
 {% endblock %}

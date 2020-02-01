@@ -7,6 +7,21 @@ from .classes.rulesImport import RulesImport
 
 # Create your views here.
 def home(request):
+  person = Person(720, 'Florida')
+  product = Product('7-1 ARM', 5.0)
+  rules_engine = RulesEngine()
+  rules = _loadRules()
+  rules_engine.runRules(person, product, rules)
+  
+  context = {
+    'data': rules_engine,
+    'logs': rules_engine.logs,
+    'person': person,
+    'product': product,
+  }
+  return render(request, 'home.html', context)
+
+def extended(request):
   person = Person(720, 'FL')
   product = Product('7-1 ARM', 5.0)
   rules_engine = RulesEngine()
