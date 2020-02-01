@@ -8,9 +8,6 @@ class Person:
   def __init__(self, credit_score: int, state: str):
     self.credit_score = credit_score
     self.state = state
-    self.debtToIncome = state
-    self.currentlyEmployed = state
-    self.minimumIncome = state
 
   def setIncome(self, currentlyEmployed: bool, currentIncome: int, debtToIncome: float):
     self.debtToIncome = debtToIncome

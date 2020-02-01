@@ -11,7 +11,7 @@ class RulesEngine():
   logs = []
 
   def __init__(self):
-    #setup hash to link rules to functions
+    #setup dict to link rules to functions
     self.checksHash = {
       'credit': self._credit,
       'products': self._products,
@@ -32,13 +32,14 @@ class RulesEngine():
     self.product = product
     self.rules = rules
 
+    #get all rule categories (credit, state, etc.) that were loaded
     self.checks = self.rules.getRules().keys()
     self._processRules()
 
   def _processRules(self):
     """
-    This function calls check functions dynamically based on the keys in
-    the rules property
+    This function calls check functions (_credit, _state, etc.) dynamically 
+    based on the keys (credit, state, etc.) in the rules property 
     """   
 
     self.logs.append(f'*** Rules processing -> STARTED ***')
@@ -52,12 +53,17 @@ class RulesEngine():
         return
 
       try:
+        """
+        Python doesn't have a native way to use variables as function names,
+        so you have to store reference to function then call it.
+        """
         self.functionToCall = self.checksHash[category]
         self.run_function(rule)
       except:
         self.error_message = f"No function to process {category} rule."
         return 
 
+    self.logs.append(f'*** FINAL Interest Rate is {self.product.interest_rate} ***')
     self.logs.append(f'*** Rules processing -> ENDED ***')
 
   def _credit(self, rule):    
@@ -128,4 +134,5 @@ class RulesEngine():
       return
 
   def run_function(self, rule):
+    #calls method reference
     self.functionToCall(rule)

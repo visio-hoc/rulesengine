@@ -12,6 +12,13 @@
   </div>
 
   <div class="col-md-12 mt-3">
+    <div class="block"><h3>Extra Rules (Income):</h3></div>
+    <div>Employment Status (required): {{ person.currentlyEmployed }}</div>
+    <div>Income (min 50000): {{ person.currentIncome }}</div>
+    <div>DTI (max 0.41): {{ person.debtToIncome }}</div>
+  </div>
+
+  <div class="col-md-12 mt-3">
     <div class="block"><h3>Product:</h3></div>
     <div>Name: {{ product.name }}</div>
     <div>Interest Rate: {{ product.interest_rate }}</div>
