@@ -23,12 +23,12 @@ def home(request):
 
 def extended(request):
   person = Person(720, 'FL')
-  person.setIncome(True, 52000, 0.5)
+  person.setIncome(False, 52000, 0.5)
   product = Product('7-1 ARM', 5.0)
   rules_engine = RulesEngine()
 
   #using defaults + income rule set
-  rules = _loadRules('JSON', ['credit', 'products', 'states','income'])
+  rules = _loadRules('JSON', ['credit', 'products', 'states','income', 'debt', 'employment'])
 
   rules_engine.runRules(person, product, rules)
   
@@ -43,12 +43,11 @@ def extended(request):
 def _loadRules(source = 'JSON', categories = []):
   """
   I would have prefered to autoload the rules as part of the constructor for 
-  RulesEngine or at least made it a method of the RulesEngine class. But in the
-  example given, it is a seperate function.
+  RulesEngine or at least made it accessible to the RulesEngine class. But in the
+  example given, it is a seperate function, so I just stuck with it.
 
   :type categories: List
   :rtype: Rules
   """
   rules = RulesImport(source, categories)
   return rules
-

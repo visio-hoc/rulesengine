@@ -17,6 +17,8 @@ class RulesEngine():
       'products': self._products,
       'states': self._states,
       'income': self._income,
+      'debt': self._debt,
+      'employment': self._employment,
     }
 
     self.logs = []
@@ -78,10 +80,10 @@ class RulesEngine():
 
     if self.person.credit_score >= goodScore:
       self.product.interest_rate -= goodPoints
-      self.logs.append(f'Credit check -> GOOD score -> decreased by {goodPoints}')
+      self.logs.append(f'Credit check -> GOOD score -> decreased rate by {goodPoints}')
     elif self.person.credit_score < badScore:
       self.product.interest_rate += badPoints
-      self.logs.append(f'Credit check -> BAD score -> increased by {badPoints}')
+      self.logs.append(f'Credit check -> BAD score -> increased rate by {badPoints}')
 
   def _products(self, rule):
     if self.product.name in rule:
@@ -110,28 +112,37 @@ class RulesEngine():
   def _income(self, rule):
     try:
       minimumIncome = rule['income']['minimum']
-      employmentStatusRequired = rule['employment']['status']
-      debtToIncome = rule['DTI']['max']
     except:
       self.error_message = "Missing values for income rule."
       return
 
-    #if any of the checks disqualifies person, then return
-
     if self.person.currentIncome < minimumIncome:
       self.product.disqualified = True
       self.logs.append(f'Income check -> TOO LOW -> Person is disqualified.')
+
+  def _debt(self, rule):
+    print(rule)
+    try:
+      threshold = rule['debt']['threshold']
+      basis_points = rule['debt']['basis_points']
+    except:
+      self.error_message = "Missing values for debt rule."
+      return
+
+    if self.person.debtToIncome >= threshold:
+      self.product.interest_rate += basis_points
+      self.logs.append(f'Debt check -> threshold REACHED -> increase rate by {basis_points}')
+
+  def _employment(self, rule):
+    try:
+      employmentStatusRequired = rule['employment']['required']
+    except:
+      self.error_message = "Missing values for employment rule."
       return
 
     if employmentStatusRequired and not self.person.currentlyEmployed:
       self.product.disqualified = True
       self.logs.append(f'Employment Status check -> UNEMPLOYED -> Person is disqualified.')
-      return
-
-    if self.person.debtToIncome >= debtToIncome:
-      self.product.disqualified = True
-      self.logs.append(f'DTI check -> TOO HIGH -> Person is disqualified.')
-      return
 
   def run_function(self, rule):
     #calls method reference

@@ -1,0 +1,6 @@
+{
+  "debt": {
+    "threshold": 0.41,
+    "basis_points": 0.5
+  }
+}
