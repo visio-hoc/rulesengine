@@ -1,14 +1,12 @@
 from .person import Person
 from .product import Product
 from .rules import Rules
+from .logger import Logger
 
-class RulesEngine():
+class RulesEngine(Logger):
 
   #will be displayed on view if there was an error
   error_message = '' 
-
-  #logs for what rules were processed/used
-  logs = []
 
   def __init__(self):
     #setup dict to link rules to functions
@@ -44,8 +42,8 @@ class RulesEngine():
     based on the keys (credit, state, etc.) in the rules property 
     """   
 
-    self.logs.append(f'*** Rules processing -> STARTED ***')
-    self.logs.append(f'*** INITIAL Interest Rate is {self.product.interest_rate} ***')
+    self.logAdd(f'*** Rules processing -> STARTED ***')
+    self.logAdd(f'*** INITIAL Interest Rate is {self.product.interest_rate} ***')
 
     for category in self.checks:
       try:
@@ -65,8 +63,8 @@ class RulesEngine():
         self.error_message = f"No function to process {category} rule."
         return 
 
-    self.logs.append(f'*** FINAL Interest Rate is {self.product.interest_rate} ***')
-    self.logs.append(f'*** Rules processing -> ENDED ***')
+    self.logAdd(f'*** FINAL Interest Rate is {self.product.interest_rate} ***')
+    self.logAdd(f'*** Rules processing -> ENDED ***')
 
   def _credit(self, rule):    
     try:
@@ -80,10 +78,10 @@ class RulesEngine():
 
     if self.person.credit_score >= goodScore:
       self.product.interest_rate -= goodPoints
-      self.logs.append(f'Credit check -> GOOD score -> decreased rate by {goodPoints}')
+      self.logAdd(f'Credit check -> GOOD score -> decreased rate by {goodPoints}')
     elif self.person.credit_score < badScore:
       self.product.interest_rate += badPoints
-      self.logs.append(f'Credit check -> BAD score -> increased rate by {badPoints}')
+      self.logAdd(f'Credit check -> BAD score -> increased rate by {badPoints}')
 
   def _products(self, rule):
     if self.product.name in rule:
@@ -94,7 +92,7 @@ class RulesEngine():
         elif specific_rule['action'] == 'subtract':
           self.product.interest_rate -= specific_rule['basis_points']
 
-        self.logs.append(f'Product check -> rule FOUND -> {specific_rule["action"]} by {specific_rule["basis_points"]}')
+        self.logAdd(f'Product check -> rule FOUND -> {specific_rule["action"]} by {specific_rule["basis_points"]}')
       except:
         self.error_message = "Missing values for credit score rule."
 
@@ -107,7 +105,7 @@ class RulesEngine():
 
     if self.person.state in excluded:
       self.product.disqualified = True
-      self.logs.append(f'States check -> match FOUND, DISQUALIFIED -> {self.person.state} is excluded')
+      self.logAdd(f'States check -> match FOUND, DISQUALIFIED -> {self.person.state} is excluded')
 
   def _income(self, rule):
     try:
@@ -118,10 +116,9 @@ class RulesEngine():
 
     if self.person.currentIncome < minimumIncome:
       self.product.disqualified = True
-      self.logs.append(f'Income check -> TOO LOW -> Person is disqualified.')
+      self.logAdd(f'Income check -> TOO LOW -> Person is disqualified.')
 
   def _debt(self, rule):
-    print(rule)
     try:
       threshold = rule['debt']['threshold']
       basis_points = rule['debt']['basis_points']
@@ -131,7 +128,7 @@ class RulesEngine():
 
     if self.person.debtToIncome >= threshold:
       self.product.interest_rate += basis_points
-      self.logs.append(f'Debt check -> threshold REACHED -> increase rate by {basis_points}')
+      self.logAdd(f'Debt check -> threshold REACHED -> increase rate by {basis_points}')
 
   def _employment(self, rule):
     try:
@@ -142,7 +139,7 @@ class RulesEngine():
 
     if employmentStatusRequired and not self.person.currentlyEmployed:
       self.product.disqualified = True
-      self.logs.append(f'Employment Status check -> UNEMPLOYED -> Person is disqualified.')
+      self.logAdd(f'Employment Status check -> UNEMPLOYED -> Person is disqualified.')
 
   def run_function(self, rule):
     #calls method reference
