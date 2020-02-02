@@ -30,10 +30,10 @@ class RulesEngine(Logger):
 
     self.person = person
     self.product = product
-    self.rules = rules
+    self.rules = rules.rules
 
     #get all rule categories (credit, state, etc.) that were loaded
-    self.checks = self.rules.getRules().keys()
+    self.checks = self.rules.keys()
     self._processRules()
 
   def _processRules(self):
@@ -47,7 +47,7 @@ class RulesEngine(Logger):
 
     for category in self.checks:
       try:
-        rule = self.rules.getRules(category)
+        rule = self.rules[category]
       except:
         self.error_message = f"No {category} rule found."
         return

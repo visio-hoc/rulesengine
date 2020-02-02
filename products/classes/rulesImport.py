@@ -43,14 +43,3 @@ class RulesImport(Rules):
 
   def _MYSQL(self):
     return self.rules
-
-  def getRules(self, key = ''):
-    if not key:
-      #no key given, return all rules
-      return self.rules
-    else:
-      try:
-        return self.rules[key]
-      except:
-        #key error
-        return None

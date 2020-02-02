@@ -16,11 +16,14 @@ class ProductsClassRulesImportTest(TestCase):
     self.assertTrue(isinstance(self.genericRules, Rules))
 
     self.assertEqual('JSON', self.genericRules.source)
-    self.assertEqual(['credit', 'products', 'states'], self.genericRules.rules)
+    self.assertEqual(['credit', 'products', 'states'], self.genericRules.categories)
 
-  """def testPersonMethodSetIncome(self):
-    self.genericPerson.setIncome(False, 52000, 0.5)
+  def testRulesImportCreationCustom(self):
+    """
+    test if RulesImport object was instantiated properly using custom params
+    """
+    self.customRules = RulesImport('CSV', ['credit'])
+    self.assertTrue(isinstance(self.customRules, Rules))
 
-    self.assertEqual(False, self.genericPerson.currentlyEmployed)
-    self.assertEqual(52000, self.genericPerson.currentIncome)
-    self.assertEqual(0.5, self.genericPerson.debtToIncome)"""
+    self.assertEqual('CSV', self.customRules.source)
+    self.assertEqual(['credit'], self.customRules.categories)
