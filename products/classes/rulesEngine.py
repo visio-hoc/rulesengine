@@ -6,7 +6,7 @@ from .logger import Logger
 class RulesEngine(Logger):
 
   #will be displayed on view if there was an error
-  error_message = '' 
+  error_message = ''
 
   def __init__(self):
     #setup dict to link rules to functions
@@ -29,7 +29,8 @@ class RulesEngine(Logger):
       return 
 
     self.person = person
-    self.product = product
+    self.originalProduct = product
+    self.product = Product(product.name, product.interest_rate)
     self.rules = rules.rules
 
     #get all rule categories (credit, state, etc.) that were loaded
