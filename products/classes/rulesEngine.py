@@ -1,6 +1,6 @@
 from .person import Person
 from .product import Product
-from .rules import Rules
+from .rule import Rule
 from .logger import Logger
 
 class RulesEngine(Logger):
@@ -22,7 +22,7 @@ class RulesEngine(Logger):
     self.logs = []
     self.error_message = ""
 
-  def runRules(self, person: Person, product: Product, rules: Rules):    
+  def runRules(self, person: Person, product: Product, rules: Rule):    
     if not rules:
       #can't move forward without rules
       self.error_message = "Empty rule set given."
@@ -51,7 +51,7 @@ class RulesEngine(Logger):
       except:
         self.error_message = f"No {category} rule found."
         return
-
+        
       try:
         """
         Python doesn't have a native way to use variables as function names,

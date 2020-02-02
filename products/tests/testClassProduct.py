@@ -1,4 +1,3 @@
-from django.urls import reverse
 from django.test import TestCase
 
 from ..classes.product import Product

@@ -1,9 +1,9 @@
 import os
 from django.conf import settings
 
-from .rules import Rules
+from .rule import Rule
 
-class RulesImport(Rules):
+class RulesImport(Rule):
 
   rules = {}
   source = ""
@@ -16,8 +16,11 @@ class RulesImport(Rules):
       self.categories = self._getDefaults()
     else:
       self.categories = categories
-    
-    #instructions mentioned rules source could be from different origins and/or format
+
+    """
+    import rules
+    instructions mentioned rules source could be from different origins and/or format
+    """
     if self.source == 'JSON':
       self._JSON()
     elif self.source == 'CSV':
