@@ -9,6 +9,7 @@ class RulesImport(Rule):
   source = ""
 
   def __init__(self, source = 'JSON', categories = []):
+    self.rules = {}
     self.source = source
 
     if categories == []:
