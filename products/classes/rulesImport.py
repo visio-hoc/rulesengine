@@ -6,33 +6,35 @@ from .rules import Rules
 class RulesImport(Rules):
 
   rules = {}
+  source = ""
 
   def __init__(self, source = 'JSON', categories = []):
-    if categories != []:
-      #custom rule categories given, update self.rules
-      for cat in categories:
-        self.rules.update({cat: {}})
+    self.source = source
+
+    if categories == []:
+      #empty rules categories, get defaults
+      self.categories = self._getDefaults()
     else:
-      self.rules = self._getDefaults()
+      self.categories = categories
     
     #instructions mentioned rules source could be from different origins and/or format
-    if source == 'JSON':
+    if self.source == 'JSON':
       self._JSON()
-    elif source == 'CSV':
+    elif self.source == 'CSV':
       self._CSV()
-    elif source == 'MYSQL':
+    elif self.source == 'MYSQL':
       self._MYSQL()
 
   def _JSON(self):
     import json
 
-    for cat in self.rules:
+    for cat in self.categories:
       """
       I could have made the folder/path an env setting
       """
       fileName = os.path.join(settings.BASE_DIR, 'products', 'rules', cat + '.json')
       filePointer = open(fileName)
-      self.rules[cat] = json.load(filePointer)
+      self.rules.update({cat: json.load(filePointer)})
 
     return self.rules
 

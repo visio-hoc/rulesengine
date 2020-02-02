@@ -1,4 +1,10 @@
 class Rules():
+  """
+  At the moment this class doesn't do much except return default rules. But 
+  I created in case we want to do some pre-processing to rules before rules
+  were imported.
+  """
+
   #default rules categories, would normally place this in settings
   categories = ['credit', 'products', 'states']
 
@@ -6,8 +12,4 @@ class Rules():
     pass
 
   def _getDefaults(self):
-    ret = {}
-    for cat in self.categories:
-      ret.update({cat: {}})
-
-    return ret
+    return self.categories
