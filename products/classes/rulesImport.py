@@ -22,12 +22,12 @@ class RulesImport():
     }
     #dict to link categories to class names
     self.categoryHash = {
-      'credit': creditRule,
-      'debt': debtRule,
-      'employment': employmentRule,
-      'income': incomeRule,
-      'products': productsRule,
-      'states': statesRule,
+      'credit': CreditRule,
+      'debt': DebtRule,
+      'employment': EmploymentRule,
+      'income': IncomeRule,
+      'products': ProductsRule,
+      'states': StatesRule,
     }
 
     #initial values
@@ -56,8 +56,8 @@ class RulesImport():
     filePointer = open(fileName)
     return json.load(filePointer)
 
-  def _CSV(self):
+  def _CSV(self, category):
     pass
 
-  def _MYSQL(self):
+  def _MYSQL(self, category):
     pass

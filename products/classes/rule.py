@@ -13,7 +13,7 @@ class Rule():
     """
     pass
 
-class creditRule(Rule):
+class CreditRule(Rule):
   def processRule(self, person, product, logs):
     try:
       goodScore = self.data['GOOD']['score']
@@ -31,7 +31,7 @@ class creditRule(Rule):
       product.interest_rate += badPoints
       logs.logAdd(f'Credit check -> BAD score -> increased rate by {badPoints}')
 
-class productsRule(Rule):
+class ProductsRule(Rule):
   def processRule(self, person, product, logs):
     if product.name in self.data:
       try:
@@ -45,7 +45,7 @@ class productsRule(Rule):
       except KeyError:
         self.error_message = "Missing values for credit score rule."
 
-class statesRule(Rule):
+class StatesRule(Rule):
   def processRule(self, person, product, logs):
     try:
       excluded = self.data['excluded']
@@ -57,7 +57,7 @@ class statesRule(Rule):
       product.disqualified = True
       logs.logAdd(f'States check -> match FOUND, DISQUALIFIED -> {person.state} is excluded')
 
-class incomeRule(Rule):
+class IncomeRule(Rule):
   def processRule(self, person, product, logs):
     try:
       minimumIncome = self.data['income']['minimum']
@@ -69,7 +69,7 @@ class incomeRule(Rule):
       product.disqualified = True
       logs.logAdd(f'Income check -> TOO LOW -> Person is disqualified.')
 
-class debtRule(Rule):
+class DebtRule(Rule):
   def processRule(self, person, product, logs):
     try:
       threshold = self.data['debt']['threshold']
@@ -82,7 +82,7 @@ class debtRule(Rule):
       product.interest_rate += basis_points
       logs.logAdd(f'Debt check -> threshold REACHED -> increase rate by {basis_points}')
 
-class employmentRule(Rule):
+class EmploymentRule(Rule):
   def processRule(self, person, product, logs):
     try:
       employmentStatusRequired = self.data['employment']['required']

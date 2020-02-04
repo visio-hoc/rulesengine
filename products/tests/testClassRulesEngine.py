@@ -18,7 +18,7 @@ class ProductsClassRulesEngineTest(TestCase):
     person = Person(800, 'NEVERLAND')
 
     rules = RulesImport('JSON', ['credit'])
-    goodPoints = rules.rules['credit']['GOOD']['basis_points']
+    goodPoints = rules.rules[0].data['GOOD']['basis_points']
     newRate = self.genericProduct.interest_rate - goodPoints
 
     self.rules_engine.runRules(person, self.genericProduct, rules)
@@ -31,7 +31,7 @@ class ProductsClassRulesEngineTest(TestCase):
     person = Person(500, 'NEVERLAND')
     
     rules = RulesImport('JSON', ['credit'])
-    badPoints = rules.rules['credit']['BAD']['basis_points']
+    badPoints = rules.rules[0].data['BAD']['basis_points']
     newRate = self.genericProduct.interest_rate + badPoints
 
     self.rules_engine.runRules(person, self.genericProduct, rules)
@@ -43,8 +43,8 @@ class ProductsClassRulesEngineTest(TestCase):
     >= threshold gets an interest rate deduction
     """
     rules = RulesImport('JSON', ['credit'])
-    goodPoints = rules.rules['credit']['GOOD']['basis_points']
-    goodScore = rules.rules['credit']['GOOD']['score']
+    goodPoints = rules.rules[0].data['GOOD']['basis_points']
+    goodScore = rules.rules[0].data['GOOD']['score']
     newRate = self.genericProduct.interest_rate - goodPoints
 
     person = Person(goodScore, 'NEVERLAND')
@@ -58,7 +58,7 @@ class ProductsClassRulesEngineTest(TestCase):
     excluded here means, product is not offered in certain states
     """
     rules = RulesImport('JSON', ['states'])
-    excluded = rules.rules['states']['excluded']
+    excluded = rules.rules[0].data['excluded']
 
     person = Person(800, excluded[0])
 
@@ -105,7 +105,7 @@ class ProductsClassRulesEngineTest(TestCase):
     test threshold income against RulesEngine
     """
     rules = RulesImport('JSON', ['income'])
-    minimumIncome = rules.rules['income']['income']['minimum']
+    minimumIncome = rules.rules[0].data['income']['minimum']
 
     person = Person(800, 'NEVERLAND')
     person.setIncome(True, minimumIncome, 0)
@@ -154,8 +154,8 @@ class ProductsClassRulesEngineTest(TestCase):
     person = Person(800, 'NEVERLAND')
     person.setIncome(True, float('inf'), 1)
     rules = RulesImport('JSON', ['debt'])
-    threshold = rules.rules['debt']['debt']['threshold']
-    basisPoints = rules.rules['debt']['debt']['basis_points']
+    threshold = rules.rules[0].data['debt']['threshold']
+    basisPoints = rules.rules[0].data['debt']['basis_points']
     newRate = self.genericProduct.interest_rate + basisPoints
 
     self.rules_engine.runRules(person, self.genericProduct, rules)
@@ -166,8 +166,8 @@ class ProductsClassRulesEngineTest(TestCase):
     test threshold debt against RulesEngine
     """    
     rules = RulesImport('JSON', ['debt'])
-    threshold = rules.rules['debt']['debt']['threshold']
-    basisPoints = rules.rules['debt']['debt']['basis_points']
+    threshold = rules.rules[0].data['debt']['threshold']
+    basisPoints = rules.rules[0].data['debt']['basis_points']
     newRate = self.genericProduct.interest_rate + basisPoints
     person = Person(800, 'NEVERLAND')
     person.setIncome(True, float('inf'), threshold)
@@ -180,9 +180,8 @@ class ProductsClassRulesEngineTest(TestCase):
     test matching product name against RulesEngine
     """
     rules = RulesImport('JSON', ['products'])
-
-    testProductName = next(iter(rules.rules['products']))
-    testProduct = rules.rules['products'][testProductName]
+    testProductName = next(iter(rules.rules[0].data))
+    testProduct = rules.rules[0].data[testProductName]
     testProductAction = testProduct['action']
     testProductPoints = testProduct['basis_points']
 
