@@ -1,8 +1,7 @@
 class Logger():
-  logs = []
 
-  def __init__():
-    pass
+  def __init__(self):
+    self.logs = []
 
   def logAdd(self, message):
     self.logs.append(message)

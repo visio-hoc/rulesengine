@@ -1,49 +1,63 @@
 import os
 from django.conf import settings
 
-from .rule import Rule
+from .rule import *
 
-class RulesImport(Rule):
+"""
+import from source class
 
-  rules = {}
-  source = ""
+"""
+class RulesImport():
 
-  def __init__(self, source = 'JSON', categories = []):
-    self.rules = {}
+  def __init__(self, source = 'JSON', categories = None):
+    #would normally place default categories in app settings
+    if categories is None:
+      categories = ['credit', 'products', 'states']
+
+    #dict to link data source to class methods
+    self.sourceHash = {
+      'JSON': self._JSON,
+      'CSV': self._CSV,
+      'MYSQL': self._MYSQL,
+    }
+    #dict to link categories to class names
+    self.categoryHash = {
+      'credit': creditRule,
+      'debt': debtRule,
+      'employment': employmentRule,
+      'income': incomeRule,
+      'products': productsRule,
+      'states': statesRule,
+    }
+
+    #initial values
+    self.rules = []
     self.source = source
+    self.categories = categories
 
-    if categories == []:
-      #empty rules categories, get defaults
-      self.categories = self._getDefaults()
-    else:
-      self.categories = categories
+    #set source function
+    source = self.sourceHash[source]
 
-    """
-    import rules
-    instructions mentioned rules source could be from different origins and/or format
-    """
-    if self.source == 'JSON':
-      self._JSON()
-    elif self.source == 'CSV':
-      self._CSV()
-    elif self.source == 'MYSQL':
-      self._MYSQL()
+    #import rules    
+    for category in self.categories:
+      #set class category
+      classCategory = self.categoryHash[category]
+      #load data from source based on category
+      data = source(category)
+      #instantiate and append the new rule class self.rules
+      self.rules.append(classCategory(category, data))
 
-  def _JSON(self):
+  def _JSON(self, category):
     import json
-
-    for cat in self.categories:
-      """
-      I could have made the folder/path an env setting
-      """
-      fileName = os.path.join(settings.BASE_DIR, 'products', 'rules', cat + '.json')
-      filePointer = open(fileName)
-      self.rules.update({cat: json.load(filePointer)})
-
-    return self.rules
+    """
+    I could have made the folder/path an env setting
+    """
+    fileName = os.path.join(settings.BASE_DIR, 'products', 'rules', category + '.json')
+    filePointer = open(fileName)
+    return json.load(filePointer)
 
   def _CSV(self):
-    return self.rules
+    pass
 
   def _MYSQL(self):
-    return self.rules
+    pass
