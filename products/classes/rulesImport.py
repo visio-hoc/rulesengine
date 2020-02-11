@@ -20,15 +20,6 @@ class RulesImport():
       'CSV': self._CSV,
       'MYSQL': self._MYSQL,
     }
-    #dict to link categories to class names
-    self.categoryHash = {
-      'credit': CreditRule,
-      'debt': DebtRule,
-      'employment': EmploymentRule,
-      'income': IncomeRule,
-      'products': ProductsRule,
-      'states': StatesRule,
-    }
 
     #initial values
     self.rules = []
@@ -40,11 +31,13 @@ class RulesImport():
 
     #import rules    
     for category in self.categories:
-      #set class category
-      classCategory = self.categoryHash[category]
+      #build class name str using the convention of CategoryRule for category rules class
+      className = category[0].upper() + category[1:] + 'Rule'
+      #save reference to categoryRule class from global vars dict
+      classCategory = globals()[className]
       #load data from source based on category
       data = source(category)
-      #instantiate and append the new rule class self.rules
+      #instantiate and append the new rule class to self.rules
       self.rules.append(classCategory(category, data))
 
   def _JSON(self, category):
