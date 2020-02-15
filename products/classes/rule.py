@@ -6,6 +6,7 @@ class Rule():
   def __init__(self, name, data):
     self.name = name
     self.data = data
+    self.error_message = ''
 
   def processRule(self, person, product, logs):
     """

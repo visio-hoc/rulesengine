@@ -29,6 +29,10 @@ class RulesEngine():
     #run all the rules in self.rules list
     for rule in self.rules:
       rule.processRule(self.person, self.product, self.logger)
+      
+      self.error_message = rule.error_message
+      if self.error_message != '':
+        break
 
     self.logger.logAdd(f'*** FINAL Interest Rate is {self.product.interest_rate} ***')
     self.logger.logAdd(f'*** Rules processing -> ENDED ***')
